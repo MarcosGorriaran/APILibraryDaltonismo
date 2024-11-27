@@ -1,4 +1,4 @@
-﻿namespace APIDaltonismoDB.Model
+﻿namespace APILibraryDaltonismo.Model
 {
     public class ChangePassword : Patient
     {

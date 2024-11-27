@@ -2,21 +2,28 @@
 using APILibraryDaltonismo.Controllers.DAO;
 using APILibraryDaltonismo.Model;
 using APILibraryDaltonismo.Model.DTO;
+using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace APILibraryDaltonismo.Controllers
 {
-    public class SessionController : ICreate<Session>, IRead<Session>
+    public class SessionController : Controller, ICreate<Session>, IRead<Session>
     {
-        HttpClient client;
+        const string AddScoreRequestPath = "AddScore";
+
+
+        public SessionController(HttpClient httpData) : base(httpData) {}
         public void Create(Session info)
         {
-            throw new NotImplementedException();
+            AddScoreRequest(info);
         }
 
-        public void Create(IEnumerator<Session> infoList)
+        public void Create(IEnumerable<Session> infoList)
         {
-            throw new NotImplementedException();
+            foreach(Session info in infoList)
+            {
+                AddScoreRequest(info);
+            }
         }
 
         public Session Get<IDValueType>(IDValueType id)
@@ -27,6 +34,10 @@ namespace APILibraryDaltonismo.Controllers
         public Session Get()
         {
             return GetScoreRequest().GetAwaiter().GetResult();
+        }
+        public void AddScoreSession(Session session)
+        {
+            
         }
 
         private async Task<Session> GetScoreRequest()
@@ -45,6 +56,12 @@ namespace APILibraryDaltonismo.Controllers
             }
             
             return JsonSerializer.Deserialize<ResponseDTO<Session>>(requestResponse).Data;
+        }
+        private async Task<Uri> AddScoreRequest(Session scoreData)
+        {
+            HttpResponseMessage response = await client.PostAsJsonAsync(AddScoreRequestPath, scoreData);
+            response.EnsureSuccessStatusCode();
+            return response.Headers.Location;
         }
     }
 }

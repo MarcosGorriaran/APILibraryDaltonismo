@@ -1,4 +1,4 @@
-﻿namespace APIDaltonismoDB.Controllers.DAO
+﻿namespace APILibraryDaltonismo.Controllers.DAO
 {
     public interface IDelete<Model>
     {
