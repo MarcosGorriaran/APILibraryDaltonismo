@@ -17,21 +17,31 @@ namespace APILibraryDaltonismo
         {
             client = new HttpClient();
             client.BaseAddress = new Uri("http://localhost:5000");
-            Console.WriteLine(CheckLoginTest(new Patient()
+            /*Console.WriteLine(CheckLoginTest(new Patient()
             {
                 DNI = Console.ReadLine() ?? String.Empty,
                 Password = Console.ReadLine() ?? String.Empty
             }));
             Console.WriteLine(GetSessionsTest());
             Console.WriteLine(GetSessionTest());
+            */
             AddSessionTest(new Session()
             {
                 ColorBlindType = "none",
                 DateGame = DateTime.Now,
                 player = new Patient()
                 {
-                    DNI = "11111111G"
+                    DNI = "11111112G"
                 }
+            });
+            AddPatientTest(new Patient()
+            {
+                DNI= Console.ReadLine() ?? String.Empty,
+                Password= Console.ReadLine() ?? String.Empty,
+                BirthDate = DateTime.Now,
+                City = "SOMEWHERE",
+                Country = "NOWHERE",
+                Name = "DALTONICPerson"
             });
         }
         public static string CheckLoginTest(Patient checkPatient)
@@ -57,6 +67,11 @@ namespace APILibraryDaltonismo
             SessionController sessionController = new SessionController(client);
             
             sessionController.Create(session);
+        }
+        public static void AddPatientTest(Patient patient)
+        {
+            PatientController patientController = new PatientController(client);
+            patientController.Create(patient);
         }
     }
 }

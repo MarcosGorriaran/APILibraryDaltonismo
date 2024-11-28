@@ -82,7 +82,14 @@ namespace APILibraryDaltonismo.Controllers
         private async Task<Uri> AddScoreRequest(Session scoreData)
         {
             HttpResponseMessage response = await client.PostAsJsonAsync(AddScoreRequestPath, scoreData);
+            
             response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+            ResponseDTO<object> responsedto = JsonSerializer.Deserialize<ResponseDTO<object>>(responseBody);
+            if (!responsedto.IsSuccess)
+            {
+                throw new Exception(responsedto.Message);
+            }
             return response.Headers.Location;
         }
 
