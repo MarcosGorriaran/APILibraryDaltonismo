@@ -42,9 +42,9 @@ namespace APILibraryDaltonismo.Controllers
         }
         private async Task<Uri> AddPatientRequest(Patient patient)
         {
-                HttpResponseMessage response = await client.PostAsJsonAsync(AddPatientPath, patient).ConfigureAwait(false);
-                response.EnsureSuccessStatusCode();
-                return response.Headers.Location;
+            HttpResponseMessage response = await client.PostAsJsonAsync(AddPatientPath, patient).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+            return response.Headers.Location;
         }
     }
 }
