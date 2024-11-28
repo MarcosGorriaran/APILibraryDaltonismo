@@ -2,7 +2,7 @@
 {
     public interface IRead<Model>
     {
-        public Model Get<IDValueType>(IDValueType id);
-        public Model Get();
+        public Model  Get<IDValueType>(IDValueType id);
+        public IEnumerable<Model> Get();
     }
 }

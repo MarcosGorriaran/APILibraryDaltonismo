@@ -8,6 +8,7 @@ namespace APILibraryDaltonismo.Controllers
     public class PatientController : Controller
     {
         const string CheckLoginPath = "CheckLogin";
+        
         public PatientController(HttpClient httpData) : base(httpData) { }
         public ResponseDTO<Patient> CheckLogin(Patient checkPatientInfo)
         {
@@ -20,8 +21,9 @@ namespace APILibraryDaltonismo.Controllers
             response.EnsureSuccessStatusCode();
             string responseDTO;
             responseDTO =  await response.Content.ReadAsStringAsync();
+            ResponseDTO<Patient> result = JsonSerializer.Deserialize<ResponseDTO<Patient>>(responseDTO, serializerOptions);
 
-            return JsonSerializer.Deserialize<ResponseDTO<Patient>>(responseDTO);
+            return result;
         }
     }
 }

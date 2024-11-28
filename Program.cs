@@ -8,32 +8,55 @@ namespace APILibraryDaltonismo
 {
     public class Program
     {
+        static HttpClient client;
+        static JsonSerializerOptions serializerOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true
+        };
         public static void Main()
         {
-            HttpClient client = new HttpClient();
+            client = new HttpClient();
             client.BaseAddress = new Uri("http://localhost:5000");
-            PatientController patController = new PatientController(client);
-            SessionController sessionController = new SessionController(client);
-            ResponseDTO<Patient> patient = patController.CheckLogin(new Patient()
+            Console.WriteLine(CheckLoginTest(new Patient()
             {
                 DNI = Console.ReadLine() ?? String.Empty,
                 Password = Console.ReadLine() ?? String.Empty
-            });
-            Console.WriteLine(JsonSerializer.Serialize(patient));
-            Console.WriteLine(Request().GetAwaiter().GetResult());
-        }
-        public static async Task<string> Request()
-        {
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:5000");
-            HttpResponseMessage response = await client.GetAsync(
-                "GetScores");
-            string requestResponse = "";
-            if (response.IsSuccessStatusCode)
+            }));
+            Console.WriteLine(GetSessionsTest());
+            Console.WriteLine(GetSessionTest());
+            AddSessionTest(new Session()
             {
-                requestResponse = await response.Content.ReadAsStringAsync();
-            }
-            return requestResponse;
+                ColorBlindType = "none",
+                DateGame = DateTime.Now,
+                player = new Patient()
+                {
+                    DNI = "11111111G"
+                }
+            });
+        }
+        public static string CheckLoginTest(Patient checkPatient)
+        {
+            PatientController patController = new PatientController(client);
+            ResponseDTO<Patient> patient = patController.CheckLogin(checkPatient);
+            return JsonSerializer.Serialize(patient,serializerOptions);
+        }
+        public static string GetSessionsTest()
+        {
+            SessionController sessionController = new SessionController(client);
+            Session[] sesions = sessionController.Get().ToArray();
+            return JsonSerializer.Serialize(sesions, serializerOptions);
+        }
+        public static string GetSessionTest()
+        {
+            SessionController sessionController = new SessionController(client);
+            Session sesion = sessionController.Get("1");
+            return JsonSerializer.Serialize(sesion, serializerOptions);
+        }
+        public static void AddSessionTest(Session session)
+        {
+            SessionController sessionController = new SessionController(client);
+            
+            sessionController.Create(session);
         }
     }
 }

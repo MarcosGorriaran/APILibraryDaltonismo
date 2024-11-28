@@ -2,6 +2,7 @@
 
 namespace APILibraryDaltonismo.Model
 {
+    
     public class Patient
     {
         public string DNI { get; set; }

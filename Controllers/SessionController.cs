@@ -10,6 +10,8 @@ namespace APILibraryDaltonismo.Controllers
     public class SessionController : Controller, ICreate<Session>, IRead<Session>
     {
         const string AddScoreRequestPath = "AddScore";
+        const string GetScoresRequestPath = "GetScores";
+        const string GetScoreRequestPath = "GetScore/";
 
 
         public SessionController(HttpClient httpData) : base(httpData) {}
@@ -28,23 +30,37 @@ namespace APILibraryDaltonismo.Controllers
 
         public Session Get<IDValueType>(IDValueType id)
         {
-            throw new NotImplementedException();
+            return GetScoreRequest(id).GetAwaiter().GetResult();
         }
 
-        public Session Get()
+        public IEnumerable<Session> Get()
         {
             return GetScoreRequest().GetAwaiter().GetResult();
         }
-        public void AddScoreSession(Session session)
+        private async Task<Session> GetScoreRequest<IDValueType>(IDValueType id)
         {
-            
-        }
+            HttpResponseMessage response = await client.GetAsync(GetScoreRequestPath+id.ToString());
+            string requestResponse;
+            if (response.IsSuccessStatusCode)
+            {
+                requestResponse = await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                throw new Exception(response.StatusCode.ToString());
+            }
 
-        private async Task<Session> GetScoreRequest()
+            ResponseDTO<Session> responseResult = JsonSerializer.Deserialize<ResponseDTO<Session>>(requestResponse, serializerOptions);
+
+            if (!responseResult.IsSuccess)
+            {
+                throw new Exception(responseResult.Message);
+            }
+            return responseResult.Data;
+        }
+        private async Task<IEnumerable<Session>> GetScoreRequest()
         {
-            HttpResponseMessage response = await client.GetAsync(
-                "GetScores");
-            ResponseDTO<Session> deserializeRequest = new ResponseDTO<Session>();
+            HttpResponseMessage response = await client.GetAsync(GetScoresRequestPath);
             string requestResponse;
             if (response.IsSuccessStatusCode)
             {
@@ -55,7 +71,13 @@ namespace APILibraryDaltonismo.Controllers
                 throw new Exception(response.StatusCode.ToString());
             }
             
-            return JsonSerializer.Deserialize<ResponseDTO<Session>>(requestResponse).Data;
+            ResponseDTO<IEnumerable<Session>> responseResult = JsonSerializer.Deserialize<ResponseDTO<IEnumerable<Session>>>(requestResponse,serializerOptions);
+
+            if (!responseResult.IsSuccess)
+            {
+                throw new Exception(responseResult.Message);
+            }
+            return responseResult.Data;
         }
         private async Task<Uri> AddScoreRequest(Session scoreData)
         {
@@ -63,5 +85,7 @@ namespace APILibraryDaltonismo.Controllers
             response.EnsureSuccessStatusCode();
             return response.Headers.Location;
         }
+
+        
     }
 }

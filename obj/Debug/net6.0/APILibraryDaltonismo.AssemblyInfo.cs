@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("APILibraryDaltonismo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1757db9d0b0920b7343e2fb16069c192da68e12d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("APILibraryDaltonismo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("APILibraryDaltonismo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
